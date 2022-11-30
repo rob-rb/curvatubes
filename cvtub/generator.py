@@ -299,7 +299,7 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
 
         if display_all and n_evals % 100 == 0 and len(E_curve) > 0:
             print('{:=5d}: E = {:.2e}, '.format(n_evals, E_curve[-1]), end="")
-            callback(u.detach().cpu().numpy())
+            callback(n_evals, u.detach().cpu().numpy())
 
         if display_all and (n_evals + 1) % 100 == 0: 
             print("")
