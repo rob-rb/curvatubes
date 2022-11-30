@@ -255,7 +255,7 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
         global u, uu, n_evals, iteration, params2, M02
         
         if flow_type == 'L2' :
-            u = fix_border(uu)
+            u =uu#gaussian_blur(uu)
             E = polykap_deg2(u, params2, delta_x, xi, GradHessConv_ZXY)
 
         if flow_type == 'averm0' :
