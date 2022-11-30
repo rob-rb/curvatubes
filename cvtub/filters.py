@@ -194,13 +194,11 @@ def periodic_padding(u_pad, u):
 
     #u_pad[-1, -1, -1] = u[0, 0, 0]
 
-first = 12
+first = 1
 def replicate_padding(u_pad, u):
     'Replicate padding of u (pad = 1 pix), with in-place copy of u into the buffer u_pad.'
-    global  first
+    global first
     c, C = 1, -1
-
-
     if first:
         print("fix u_pad!")
         # The 6 2D panels:
