@@ -22,26 +22,12 @@ import re
 import torch
 dtype = torch.cuda.FloatTensor # if torch.cuda.is_available() else torch.FloatTensor
 
-import nibabel as nib
 from skimage.morphology import ball
 from scipy.ndimage import median_filter
 
 
 'Convert nii.gz object <-> 3D np.array'
 
-def save_nii(vol, filename, compressed = True) : 
-    'Saves a 3D np.array into a .nii.gz or .nii file'
-    img = nib.Nifti1Image(vol, np.eye(4))
-    if compressed :
-        img.to_filename(filename + '.nii.gz')
-    else :
-        img.to_filename(filename + '.nii')
-
-def load_nii(nii_file) :
-    'Loads a .nii.gz or .nii file into a np.array'
-    img = nib.load(nii_file)
-    vol = np.asarray(img.get_data())
-    return vol
 
 
 '''Display slices of a volume'''
@@ -87,9 +73,9 @@ def random_init(size, prop = 0.2) : # prop between 0 and 1
     and (1-prop) of -1 pixels.'''
     if isinstance(size, int) :
         N = size
-        v0 = torch.rand((N,N,N)).type(dtype)
+        v0 = torch.rand((N,N,N))#.type(dtype)
     else :
-        v0 = torch.rand(size).type(dtype)
+        v0 = torch.rand(size)#.type(dtype)
     v0 = 1.*(v0 <= prop)
     return 2 * v0 - 1
 
@@ -174,7 +160,7 @@ def place_balls(Z,X,Y, ZZ,XX,YY, coords, r_pix, mode, dist, return_tensor = True
     
     balls = 2.*(balls != 0) - 1
     if return_tensor :
-        balls = torch.Tensor(balls).type(dtype)
+        balls = torch.Tensor(balls)#.type(dtype)
     return balls
 
 

@@ -90,7 +90,7 @@ class GeneralGaussianBlur3D_periodic(torch.nn.Module):
             self.fj_c = separable_fourier_filter(Y//2, sig_y)  # (1,1,Y) complex
         
     def forward(self, u):
-
+        return u
         if self.trivial :
             return u
         

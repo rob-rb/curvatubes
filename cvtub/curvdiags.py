@@ -32,7 +32,7 @@ from cvtub.energy import auxiliary_function
 def kap_eps(u, eps = 0.02, delta_x = 0.01, mode = 'periodic', xi = 1e-6) : 
 
     if type(u) != torch.Tensor :
-        u = torch.tensor(u).type(dtype)
+        u = torch.tensor(u)#.type(dtype)
     grad, Hess_diag, Hess_off = auxiliary_function(u, eps, delta_x, mode) 
 
     dz_u = grad[...,0] ;      dx_u = grad[...,1];       dy_u = grad[...,2]
@@ -69,13 +69,14 @@ def kap_eps(u, eps = 0.02, delta_x = 0.01, mode = 'periodic', xi = 1e-6) :
     return kap1_eps, kap2_eps
 
 
-def curvhist(vol, kap1_eps, kap2_eps, lev = 0, delta_x = 0.01, 
+def curvhist(vol, kap1_eps, kap2_eps, lev = 0, delta_x = 0.01, show_stats=False,
              show_figs = True, bins = 100,  save = False, save_name = 'default.png') :
     
     Z,X,Y = vol.shape
-    print('Analysis for level set u = {}'.format(lev))
-    verts, faces, normals, values_mc = skimage.measure.marching_cubes(vol, level = lev) #, allow_degenerate = False) 
-
+    #print('Analysis for level set u = {}'.format(lev))
+    verts, faces, normals, values_mc = skimage.measure.marching_cubes(vol, level = lev) #, allow_degenerate = False)
+    chi = len(verts) - .5*len(faces)
+    genus = (chi - 1)*0.5
     #compute cells areas
     As = verts[faces[:,0]]
     Bs = verts[faces[:,1]]
@@ -88,11 +89,13 @@ def curvhist(vol, kap1_eps, kap2_eps, lev = 0, delta_x = 0.01,
     areas = np.sqrt(midlen * (midlen - alen) * (midlen - blen) * (midlen - clen))
     
     total_area = areas.sum() 
-    print('Total area of the mesh is ',total_area * delta_x**2, ' (real unit)')
+
     
     total_volume = (vol > lev).sum()
-    print('Total volume of the solid: ', total_volume * delta_x**3, 'approximately (real unit),')
-    print('i.e. ', total_volume / (Z*X*Y), '% of the total domain volume. \n')
+    if show_stats:
+        print('Total area of the mesh is ', total_area * delta_x ** 2, ' (real unit)')
+        print('Total volume of the solid: ', total_volume * delta_x**3, 'approximately (real unit),')
+        print('i.e. ', total_volume / (Z*X*Y), '% of the total domain volume. \n')
     
     # interpolate the values of kap1_eps and kap2_eps on the barycenters of each mesh cell
     aux_grid = (np.arange(Z),np.arange(X),np.arange(Y))
@@ -117,7 +120,7 @@ def curvhist(vol, kap1_eps, kap2_eps, lev = 0, delta_x = 0.01,
             plt.savefig(save_name)
         plt.show()
     
-    return kap1_vals, kap2_vals, areas
+    return kap1_vals, kap2_vals, areas, genus
 
 
 def density_scatter(x, y, areas, xlabel = '', ylabel = '', showid = False, showparab = False,

@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt
 
 import torch
 
-from cvtub.utils import save_nii, slices, project_average
+from cvtub.utils import slices, project_average
 from cvtub.filters import GeneralGaussianBlur3D_periodic, GeneralGaussianBlur3D_notperiodic
 from cvtub.filters import my_custom_GradHess
 
@@ -31,7 +31,7 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
                     flow_type, mode, M0 = None,
                    snapshot_folder = '', exp_title = '',
                    cond_take_snapshot = None, display_all = True, 
-                   return_var = False, return_energy = False, check_viable = False) :
+                   return_var = False, return_energy = False, check_viable = False, callback=False) :
     
     ''' Optimizes the phase-field energy 
     
@@ -163,12 +163,16 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
         raise ValueError("optim_method should be one of 'adam' or 'bfgs'.")
 
     if mode == 'periodic' :
-        gaussian_blur = GeneralGaussianBlur3D_periodic(Z,X,Y,sigma_blur,sigma_blur,sigma_blur).cuda()
+        gaussian_blur = GeneralGaussianBlur3D_periodic(Z,X,Y,sigma_blur,sigma_blur,sigma_blur)
+
     elif mode == 'replicate' :
-        gaussian_blur = GeneralGaussianBlur3D_notperiodic(Z,X,Y,sigma_blur,sigma_blur,sigma_blur).cuda()
+        gaussian_blur = GeneralGaussianBlur3D_notperiodic(Z,X,Y,sigma_blur,sigma_blur,sigma_blur)
+
     else :
         raise ValueError("mode should be one of 'periodic' or 'replicate'.")
 
+    if torch.cuda.is_available():
+        gaussian_blur = gaussian_blur.cuda()
     LZ = Z * delta_x ; LX = X * delta_x ; LY = Y * delta_x # mathematical lengths of the domain
     
     title = 'polykap_deg2 '+ optim_method + ' ' + flow_type + ' ' + mode
@@ -199,14 +203,17 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
     
     # Construct the differential operators Grad, Hess, Div with buffered memory
     GradHessian = my_custom_GradHess(mode)
-    GradHessConv_ZXY = GradHessian(Z,X,Y).cuda()
+    GradHessConv_ZXY = GradHessian(Z,X,Y)
+
+    if torch.cuda.is_available():
+            GradHessConv_ZXY  = GradHessConv_ZXY.cuda()
     
     if flow_type == 'cons' :
         from cvtub.filters import my_custom_Div
         Divergence_class = my_custom_Div(mode)
-        Divergence = Divergence_class(Z,X,Y).cuda()
-    
-    # initialise u and uu    
+
+        Divergence = Divergence_class(Z,X,Y)#.cuda()
+
     if flow_type in ['L2','averm0'] :
         uu = v0.clone()
         uu.requires_grad = True
@@ -268,21 +275,20 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
         #    Fid = 0
                     
         if n_evals % display_it_nb == 0 :
-            print('E = {}'.format(E.item()))
+            print('E = {}'.format(float(E.item())))
 
         n_evals += 1
+
         
         return E # Reg + Fid
     
-    def track_E(E) :
-        
+    def track_E(E):
         if np.isnan(E.item()) == True :
             global nan_OK
             nan_OK = False
-            
         if n_evals % fill_curve_nb == 0 :   
             global E_curve, Fid_curve, grad_L1mean_curve, grad_max_curve
-            
+
             E_curve += [E.item()]
             
             grad_L1mean = (torch.sum(torch.abs(variable.grad)) / (Z * X * Y)).item()
@@ -291,8 +297,9 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
             grad_max = (torch.abs(variable.grad).max()).item()
             grad_max_curve += [grad_max]
 
-        if display_all and n_evals % 100 == 0 and len(E_curve) > 0 : 
+        if display_all and n_evals % 100 == 0 and len(E_curve) > 0:
             print('{:=5d}: E = {:.2e}, '.format(n_evals, E_curve[-1]), end="")
+            callback(u.detach().cpu().numpy())
 
         if display_all and (n_evals + 1) % 100 == 0: 
             print("")
@@ -324,8 +331,8 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
             first_snapshot = False
             
     def closure():
-        if cond_take_snapshot is not None :
-            take_snapshot()
+        #if cond_take_snapshot is not None:
+        #    take_snapshot()
         
         optimizer.zero_grad()
         E = loss()
@@ -335,7 +342,7 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
         track_mass()
         return E
 
-    while nan_OK and viable_OK and n_evals <= maxeval :
+    while nan_OK and viable_OK and n_evals <= maxeval:
         
         optimizer.step(closure)
         iteration += 1 # for sgd and adam, iteration = n_evals
