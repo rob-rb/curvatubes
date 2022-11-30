@@ -200,8 +200,6 @@ def replicate_padding(u_pad, u):
     global  first
     c, C = 1, -1
 
-    # Central chunk:
-    u_pad[c:C, c:C, c:C] = u
 
     if first:
         print("fix u_pad!")
@@ -257,6 +255,8 @@ def replicate_padding(u_pad, u):
         u[:, :, 0]=u_pad[c:C, c:C, 0]
         u[:, :, -1]=u_pad[c:C, c:C, -1]
 
+    # Central chunk:
+    u_pad[c:C, c:C, c:C] = u
 
 'Then, grad and Hess'
 def grad_hessian(u_pad, grad, H_diag, H_off):
