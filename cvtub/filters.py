@@ -204,6 +204,7 @@ def replicate_padding(u_pad, u):
     u_pad[c:C, c:C, c:C] = u
 
     if first:
+        print("fix u_pad!")
         # The 6 2D panels:
         u_pad[ 0, c:C, c:C] = u[ 0, :, :]
         u_pad[-1, c:C, c:C] = u[-1, :, :]
@@ -246,6 +247,16 @@ def replicate_padding(u_pad, u):
         #u_pad[0, -1, -1] = u[0, -1, -1]
         #u_pad[-1, 0, -1] = u[-1, 0, -1]
         first = False
+    else:
+        u[0, :, :]=u_pad[0, c:C, c:C]
+        u[-1, :, :]=u_pad[-1, c:C, c:C]
+
+        u[:, 0, :]=u_pad[c:C, 0, c:C]
+        u[:, -1, :]=u_pad[c:C, -1, c:C]
+
+        u[:, :, 0]=u_pad[c:C, c:C, 0]
+        u[:, :, -1]=u_pad[c:C, c:C, -1]
+
 
 'Then, grad and Hess'
 def grad_hessian(u_pad, grad, H_diag, H_off):
