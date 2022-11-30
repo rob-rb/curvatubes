@@ -161,18 +161,18 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
         line_search_fn = optim_props['line_search_fn']
     else :
         raise ValueError("optim_method should be one of 'adam' or 'bfgs'.")
-
-    if mode == 'periodic' :
-        gaussian_blur = GeneralGaussianBlur3D_periodic(Z,X,Y,sigma_blur,sigma_blur,sigma_blur)
-
-    elif mode == 'replicate' :
-        gaussian_blur = GeneralGaussianBlur3D_notperiodic(Z,X,Y,sigma_blur,sigma_blur,sigma_blur)
+    #
+    # if mode == 'periodic' :
+    #     gaussian_blur = GeneralGaussianBlur3D_periodic(Z,X,Y,sigma_blur,sigma_blur,sigma_blur)
+    #
+    # elif mode == 'replicate' :
+    #     gaussian_blur = GeneralGaussianBlur3D_notperiodic(Z,X,Y,sigma_blur,sigma_blur,sigma_blur)
 
     else :
         raise ValueError("mode should be one of 'periodic' or 'replicate'.")
-
-    if torch.cuda.is_available():
-        gaussian_blur = gaussian_blur.cuda()
+    #
+    # if torch.cuda.is_available():
+    #     gaussian_blur = gaussian_blur.cuda()
     LZ = Z * delta_x ; LX = X * delta_x ; LY = Y * delta_x # mathematical lengths of the domain
     
     title = 'polykap_deg2 '+ optim_method + ' ' + flow_type + ' ' + mode
@@ -217,13 +217,13 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
     if flow_type in ['L2','averm0'] :
         uu = v0.clone()
         uu.requires_grad = True
-        u = gaussian_blur(v0) # this one is not really used by closure(), only for display
+        u = v0 #gaussian_blur(v0) # this one is not really used by closure(), only for display
     
     elif flow_type == 'cons' :
         if M0 is None :
             M0 = 0
         uu = Divergence(A0) / delta_x + M0 # using + or - Div(A) actually does not matter
-        u = gaussian_blur(uu)
+        u = uu#gaussian_blur(uu)
         
         A = A0.clone()
         A.requires_grad = True
@@ -255,17 +255,17 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
         global u, uu, n_evals, iteration, params2, M02
         
         if flow_type == 'L2' :
-            u = gaussian_blur(uu)
+            u = uu#gaussian_blur(uu)
             E = polykap_deg2(u, params2, delta_x, xi, GradHessConv_ZXY)
 
         if flow_type == 'averm0' :
-            u = gaussian_blur(uu)
+            u = uu#gaussian_blur(uu)
             u_m0 = project_average(u, m = M02)
             E = polykap_deg2(u_m0, params2, delta_x, xi, GradHessConv_ZXY)
         
         if flow_type == 'cons' :
             uu = Divergence(A) / delta_x + M02
-            u = gaussian_blur(uu)
+            u = uu#gaussian_blur(uu)
             E = polykap_deg2(u, params2, delta_x, xi, GradHessConv_ZXY)
 
         #fidelity_term: may be used as future work in a Reg + Fid segmentation method

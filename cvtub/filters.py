@@ -79,7 +79,7 @@ class GeneralGaussianBlur3D_periodic(torch.nn.Module):
     'Applies a Gaussian blur of sizes (sig_z,sig_x,sig_y) in PERIODIC mode'
     
     def __init__(self, Z,X,Y, sig_z,sig_x,sig_y):
-        super(GeneralGaussianBlur3D_periodic, self).__init__()
+        #super(GeneralGaussianBlur3D_periodic, self).__init__()
         
         if None in [sig_z, sig_x, sig_y] :
             self.trivial = True
