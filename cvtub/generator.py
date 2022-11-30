@@ -168,8 +168,8 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
     # elif mode == 'replicate' :
     #     gaussian_blur = GeneralGaussianBlur3D_notperiodic(Z,X,Y,sigma_blur,sigma_blur,sigma_blur)
 
-    else :
-        raise ValueError("mode should be one of 'periodic' or 'replicate'.")
+    #else :
+    #    raise ValueError("mode should be one of 'periodic' or 'replicate'.")
     #
     # if torch.cuda.is_available():
     #     gaussian_blur = gaussian_blur.cuda()
