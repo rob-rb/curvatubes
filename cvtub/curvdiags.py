@@ -21,9 +21,9 @@ from scipy.interpolate import interpn
 
 import skimage
 from scipy.interpolate import RegularGridInterpolator as RGI
-
 import torch
-dtype = if torch.cuda.is_available() else torch.FloatTensor
+dtype = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.FloatTensor
+
 
 from cvtub.utils import double_W_prime, manual_softplus
 from cvtub.energy import auxiliary_function
