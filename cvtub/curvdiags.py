@@ -23,7 +23,7 @@ import skimage
 from scipy.interpolate import RegularGridInterpolator as RGI
 
 import torch
-dtype = torch.cuda.FloatTensor #if torch.cuda.is_available() else torch.FloatTensor
+dtype = if torch.cuda.is_available() else torch.FloatTensor
 
 from cvtub.utils import double_W_prime, manual_softplus
 from cvtub.energy import auxiliary_function
@@ -32,7 +32,7 @@ from cvtub.energy import auxiliary_function
 def kap_eps(u, eps = 0.02, delta_x = 0.01, mode = 'periodic', xi = 1e-6) : 
 
     if type(u) != torch.Tensor :
-        u = torch.tensor(u)#.type(dtype)
+        u = torch.tensor(u).type(dtype)
     grad, Hess_diag, Hess_off = auxiliary_function(u, eps, delta_x, mode) 
 
     dz_u = grad[...,0] ;      dx_u = grad[...,1];       dy_u = grad[...,2]
