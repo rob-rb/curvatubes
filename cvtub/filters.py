@@ -194,55 +194,58 @@ def periodic_padding(u_pad, u):
 
     #u_pad[-1, -1, -1] = u[0, 0, 0]
 
+first = True
 def replicate_padding(u_pad, u):
     'Replicate padding of u (pad = 1 pix), with in-place copy of u into the buffer u_pad.'
-    
+    global  first
     c, C = 1, -1
 
     # Central chunk:
     u_pad[c:C, c:C, c:C] = u
 
-    # The 6 2D panels:
-    u_pad[ 0, c:C, c:C] = u[ 0, :, :]
-    u_pad[-1, c:C, c:C] = u[-1, :, :]
+    if first:
+        # The 6 2D panels:
+        u_pad[ 0, c:C, c:C] = u[ 0, :, :]
+        u_pad[-1, c:C, c:C] = u[-1, :, :]
 
-    u_pad[c:C, 0, c:C] = u[:, 0, :]
-    u_pad[c:C,-1, c:C] = u[:,-1, :]
+        u_pad[c:C, 0, c:C] = u[:, 0, :]
+        u_pad[c:C,-1, c:C] = u[:,-1, :]
 
-    u_pad[c:C, c:C, 0] = u[:, :, 0]
-    u_pad[c:C, c:C,-1] = u[:, :,-1]
+        u_pad[c:C, c:C, 0] = u[:, :, 0]
+        u_pad[c:C, c:C,-1] = u[:, :,-1]
 
-    # The 12 1D lines:
-    u_pad[ 0, 0, c:C] = u[ 0, 0, :]
-    u_pad[ 0,-1, c:C] = u[ 0,-1, :]
+        # The 12 1D lines:
+        u_pad[ 0, 0, c:C] = u[ 0, 0, :]
+        u_pad[ 0,-1, c:C] = u[ 0,-1, :]
 
-    u_pad[-1, 0, c:C] = u[-1, 0, :]
-    u_pad[-1,-1, c:C] = u[-1,-1, :]
-
-
-    u_pad[ 0, c:C, 0] = u[ 0, :, 0]
-    u_pad[ 0, c:C,-1] = u[ 0, :,-1]
-
-    u_pad[-1, c:C, 0] = u[-1, :, 0]
-    u_pad[-1, c:C,-1] = u[-1, :,-1]
+        u_pad[-1, 0, c:C] = u[-1, 0, :]
+        u_pad[-1,-1, c:C] = u[-1,-1, :]
 
 
-    u_pad[ c:C, 0, 0] = u[:, 0, 0]
-    u_pad[ c:C, 0,-1] = u[:, 0,-1]
+        u_pad[ 0, c:C, 0] = u[ 0, :, 0]
+        u_pad[ 0, c:C,-1] = u[ 0, :,-1]
 
-    u_pad[ c:C, -1, 0] = u[:,-1, 0]
-    u_pad[ c:C, -1,-1] = u[:,-1,-1]
+        u_pad[-1, c:C, 0] = u[-1, :, 0]
+        u_pad[-1, c:C,-1] = u[-1, :,-1]
 
-    # The 8 corners: not useful
-    #u_pad[0, 0, 0] = u[0, 0, 0]
 
-    #u_pad[-1, 0, 0] = u[-1, 0, 0]
-    #u_pad[0, -1, 0] = u[0, -1, 0]
-    #u_pad[0, 0, -1] = u[0, 0, -1]
+        u_pad[ c:C, 0, 0] = u[:, 0, 0]
+        u_pad[ c:C, 0,-1] = u[:, 0,-1]
 
-    #u_pad[-1, -1, 0] = u[-1, -1, 0]
-    #u_pad[0, -1, -1] = u[0, -1, -1]
-    #u_pad[-1, 0, -1] = u[-1, 0, -1]
+        u_pad[ c:C, -1, 0] = u[:,-1, 0]
+        u_pad[ c:C, -1,-1] = u[:,-1,-1]
+
+        # The 8 corners: not useful
+        #u_pad[0, 0, 0] = u[0, 0, 0]
+
+        #u_pad[-1, 0, 0] = u[-1, 0, 0]
+        #u_pad[0, -1, 0] = u[0, -1, 0]
+        #u_pad[0, 0, -1] = u[0, 0, -1]
+
+        #u_pad[-1, -1, 0] = u[-1, -1, 0]
+        #u_pad[0, -1, -1] = u[0, -1, -1]
+        #u_pad[-1, 0, -1] = u[-1, 0, -1]
+        first = False
 
 'Then, grad and Hess'
 def grad_hessian(u_pad, grad, H_diag, H_off):
@@ -354,6 +357,8 @@ def backward_H_off(d_pad, d_u):
     d_u[:,:,:] += (dHo_ZX + dHo_zx - dHo_zX - dHo_Zx) / 4  # d^2/(dz*dx)
     d_u[:,:,:] += (dHo_ZY + dHo_zy - dHo_zY - dHo_Zy) / 4  # d^2/(dz*dy)
     d_u[:,:,:] += (dHo_XY + dHo_xy - dHo_xY - dHo_Xy) / 4  # d^2/(dx*dy)
+
+
 
 
 def my_custom_GradHess(mode) :

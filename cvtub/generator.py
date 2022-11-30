@@ -255,7 +255,7 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
         global u, uu, n_evals, iteration, params2, M02
         
         if flow_type == 'L2' :
-            u = uu#gaussian_blur(uu)
+            u = fix_border(uu)
             E = polykap_deg2(u, params2, delta_x, xi, GradHessConv_ZXY)
 
         if flow_type == 'averm0' :
@@ -278,8 +278,7 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
             print('E = {}'.format(float(E.item())))
 
         n_evals += 1
-        mass = u.mean().item()
-        print("mass ", mass)
+
         return E # Reg + Fid
     
     def track_E(E):
