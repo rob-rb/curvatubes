@@ -278,8 +278,8 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
             print('E = {}'.format(float(E.item())))
 
         n_evals += 1
-
-        
+        mass = u.mean().item()
+        print("mass ", mass)
         return E # Reg + Fid
     
     def track_E(E):
@@ -348,11 +348,13 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
         iteration += 1 # for sgd and adam, iteration = n_evals
         first_snapshot = True # retake snapshots for the next interesting iteration
         
-        if check_viable and n_evals in [500,1000,5000] : # check 3 times
+        if check_viable and n_evals in [100, 500,1000,5000] : # check 3 times
             rat = ratio_discr(u, eps = eps, delta_x = delta_x, mode = mode).item()
+            print("rat ", rat)
             good_max = .1 < u.max().item()
             good_min = u.min().item() < -.1
             if not(good_max and good_min and rat < .75) :
+                print("viable ", viable_OK)
                 viable_OK = False
         
         # we show -var.grad instead of +var.grad
