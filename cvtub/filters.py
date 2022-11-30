@@ -199,7 +199,7 @@ def replicate_padding(u_pad, u):
     'Replicate padding of u (pad = 1 pix), with in-place copy of u into the buffer u_pad.'
     global first
     c, C = 1, -1
-    if first:
+    if True:
         print("fix u_pad!")
         # The 6 2D panels:
         u_pad[ 0, c:C, c:C] = u[ 0, :, :]
