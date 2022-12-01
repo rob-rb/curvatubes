@@ -403,9 +403,9 @@ def my_custom_GradHess(mode) :
             
             ctx.save_for_backward(d_pad, d_u)
             print("forward")
-            padding(u_pad, u, first_forward) # Pad u
+            padding(u_pad, u, GradHessianFunc.first_forward) # Pad u
             grad_hessian(u_pad, grad, H_diag, H_off)  # Compute the gradient and Hessian in place
-            first_forward = False
+            GradHessianFunc.first_forward = False
             return grad, H_diag, H_off
 
 
@@ -417,17 +417,17 @@ def my_custom_GradHess(mode) :
 
             # Backward from d_grad:
             print("backward")
-            padding(d_pad, d_grad, first_backward)    # d_pad <- d_grad
+            padding(d_pad, d_grad, GradHessianFunc.first_backward)    # d_pad <- d_grad
             backward_grad(d_pad, d_u) # d_pad -> d_u
 
             # Backward from d_H_diag:
-            padding(d_pad, d_H_diag, first_backward)    # d_pad <- d_H_diag
+            padding(d_pad, d_H_diag, GradHessianFunc.first_backward)    # d_pad <- d_H_diag
             backward_H_diag(d_pad, d_u) # d_pad -> d_u
 
             # Backward from d_H_off:
-            padding(d_pad, d_H_off, first_backward)    # d_pad <- d_H_off
+            padding(d_pad, d_H_off, GradHessianFunc.first_backward)    # d_pad <- d_H_off
             backward_H_off(d_pad, d_u) # d_pad -> d_u
-            first_backward = False
+            GradHessianFunc.first_backward = False
             return d_u, None, None, None, None, None, None
 
     class GradHessian(torch.nn.Module):
