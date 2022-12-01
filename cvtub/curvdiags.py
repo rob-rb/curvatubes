@@ -29,7 +29,7 @@ from cvtub.utils import double_W_prime, manual_softplus
 from cvtub.energy import auxiliary_function
 
 
-def kap_eps(u, eps = 0.02, delta_x = 0.01, mode = 'periodic', xi = 1e-6) : 
+def kap_eps(u, eps = 0.02, delta_x = 0.01, mode = 'replicate', xi = 1e-6) :
 
     if type(u) != torch.Tensor :
         u = torch.tensor(u).type(dtype)
