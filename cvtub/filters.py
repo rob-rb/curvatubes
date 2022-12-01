@@ -199,7 +199,7 @@ def replicate_padding(u_pad, u):
     'Replicate padding of u (pad = 1 pix), with in-place copy of u into the buffer u_pad.'
     global first
     c, C = 1, -1
-    if True:
+    if first:
         print("fix u_pad!")
         # The 6 2D panels:
         u_pad[ 0, c:C, c:C] = u[ 0, :, :]
@@ -243,15 +243,15 @@ def replicate_padding(u_pad, u):
         #u_pad[0, -1, -1] = u[0, -1, -1]
         #u_pad[-1, 0, -1] = u[-1, 0, -1]
         first -= 1
-    else:
-        u[0, :, :]=u_pad[0, c:C, c:C]
-        u[-1, :, :]=u_pad[-1, c:C, c:C]
-
-        u[:, 0, :]=u_pad[c:C, 0, c:C]
-        u[:, -1, :]=u_pad[c:C, -1, c:C]
-
-        u[:, :, 0]=u_pad[c:C, c:C, 0]
-        u[:, :, -1]=u_pad[c:C, c:C, -1]
+    # else:
+    #     u[0, :, :]=u_pad[0, c:C, c:C]
+    #     u[-1, :, :]=u_pad[-1, c:C, c:C]
+    #
+    #     u[:, 0, :]=u_pad[c:C, 0, c:C]
+    #     u[:, -1, :]=u_pad[c:C, -1, c:C]
+    #
+    #     u[:, :, 0]=u_pad[c:C, c:C, 0]
+    #     u[:, :, -1]=u_pad[c:C, c:C, -1]
 
     # Central chunk:
     u_pad[c:C, c:C, c:C] = u
