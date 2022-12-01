@@ -421,7 +421,7 @@ def my_custom_GradHess(mode) :
             backward_grad(d_pad, d_u) # d_pad -> d_u
 
             # Backward from d_H_diag:
-            padding(d_pad, d_H_diag, True)    # d_pad <- d_H_diag
+            padding(d_pad, d_H_diag, GradHessianFunc.first_backward)    # d_pad <- d_H_diag
             backward_H_diag(d_pad, d_u) # d_pad -> d_u
 
             # Backward from d_H_off:
