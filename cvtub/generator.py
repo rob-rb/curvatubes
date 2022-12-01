@@ -31,7 +31,7 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
                     flow_type, mode, M0 = None,
                    snapshot_folder = '', exp_title = '',
                    cond_take_snapshot = None, display_all = True, 
-                   return_var = False, return_energy = False, check_viable = False, callback=False) :
+                   return_var = False, return_energy = False, check_viable = False, callback_count=100, callback=False) :
     
     ''' Optimizes the phase-field energy 
     
@@ -296,7 +296,7 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
             grad_max = (torch.abs(variable.grad).max()).item()
             grad_max_curve += [grad_max]
 
-        if display_all and n_evals % 100 == 0 and len(E_curve) > 0:
+        if display_all and n_evals % callback_count == 0 and len(E_curve) > 0:
             print('{:=5d}: E = {:.2e}, '.format(n_evals, E_curve[-1]), end="")
             callback(n_evals, u.detach().cpu().numpy())
 
