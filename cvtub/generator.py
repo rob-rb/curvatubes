@@ -357,9 +357,9 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
                 viable_OK = False
         
         # we show -var.grad instead of +var.grad
-        if display_all and optim_method == 'adam' and (n_evals in [100, 300] or n_evals % display_it_nb == 0) :
-            print(" umin = {}, umax = {}".format(u.min().item(), u.max().item()) )
-            slices(u, rescale = True)
+        if display_all and optim_method == 'adam' and (n_evals in [100, 300] or n_evals % display_it_nb == 0):
+            #print(" umin = {}, umax = {}".format(u.min().item(), u.max().item()) )
+            slices(u, rescale=True)
             #if flow_type != 'cons' :
             #    slices(-uu.grad, rescale = True)
         #if display_all and display_all and optim_method == 'sgd' and (n_evals in [100, 300] or n_evals % display_it_nb == 0) :
