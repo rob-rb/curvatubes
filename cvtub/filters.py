@@ -106,7 +106,7 @@ class GeneralGaussianBlur3D_notperiodic(torch.nn.Module):
     def __init__(self, Z,X,Y, sig_z,sig_x,sig_y,padding_mode='replicate'):
         #Note: padding_mode can also be 'constant' (zero padding) or 'periodic' 
         #(but then would be very close to the usual GeneralGaussianBlur3D_periodic).
-        print("hello ", type(self))
+
         #torch.nn.Module.__init__(self)
         self.trivial = True
         if 0 not in [sig_z, sig_x, sig_y]:
