@@ -161,15 +161,15 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
         line_search_fn = optim_props['line_search_fn']
     else :
         raise ValueError("optim_method should be one of 'adam' or 'bfgs'.")
-    #
-    # if mode == 'periodic' :
-    #     gaussian_blur = GeneralGaussianBlur3D_periodic(Z,X,Y,sigma_blur,sigma_blur,sigma_blur)
-    #
-    # elif mode == 'replicate' :
-    #     gaussian_blur = GeneralGaussianBlur3D_notperiodic(Z,X,Y,sigma_blur,sigma_blur,sigma_blur)
 
-    #else :
-    #    raise ValueError("mode should be one of 'periodic' or 'replicate'.")
+    if mode == 'periodic' :
+        gaussian_blur = GeneralGaussianBlur3D_periodic(Z,X,Y,sigma_blur,sigma_blur,sigma_blur)
+
+    elif mode == 'replicate' :
+        gaussian_blur = GeneralGaussianBlur3D_notperiodic(Z,X,Y,sigma_blur,sigma_blur,sigma_blur)
+
+    else :
+       raise ValueError("mode should be one of 'periodic' or 'replicate'.")
     #
     # if torch.cuda.is_available():
     #     gaussian_blur = gaussian_blur.cuda()
@@ -255,7 +255,7 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
         global u, uu, n_evals, iteration, params2, M02
         
         if flow_type == 'L2' :
-            u =uu#gaussian_blur(uu)
+            u = gaussian_blur(uu)
             E = polykap_deg2(u, params2, delta_x, xi, GradHessConv_ZXY)
 
         if flow_type == 'averm0' :
