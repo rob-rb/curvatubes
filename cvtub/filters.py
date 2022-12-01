@@ -242,7 +242,7 @@ def replicate_padding(u_pad, u):
         #u_pad[0, -1, -1] = u[0, -1, -1]
         #u_pad[-1, 0, -1] = u[-1, 0, -1]
         first -= 1
-    elif True:
+    elif False:
          u[0, :, :]=u_pad[0, c:C, c:C]
          u[-1, :, :]=u_pad[-1, c:C, c:C]
 
@@ -251,6 +251,23 @@ def replicate_padding(u_pad, u):
 
          u[:, :, 0]=u_pad[c:C, c:C, 0]
          u[:, :, -1]=u_pad[c:C, c:C, -1]
+    elif True:
+        # The 12 1D lines:
+        u[0, 0, :] = u_pad[0, 0, c:C]
+        u[0, -1, :] = u_pad[0, -1, c:C]
+        u[-1, 0, :] = u_pad[-1, 0, c:C]
+        u[-1, -1, :] = u_pad[-1, -1, c:C]
+
+        u[0, :, 0] = u_pad[0, c:C, -1]
+
+        u[0, :, -1] = u_pad[-1, c:C, 0]
+        u[-1, :, -1] = u_pad[-1, c:C, -1]
+
+        u[:, 0, 0] = u_pad[c:C, 0, 0]
+        u[:, 0, -1] = u_pad[c:C, 0, -1]
+
+        u[:, -1, 0] = u_pad[c:C, -1, 0]
+        u[:, -1, -1] = u_pad[c:C, -1, -1]
 
     # Central chunk:
     u_pad[c:C, c:C, c:C] = u
