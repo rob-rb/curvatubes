@@ -193,10 +193,8 @@ def periodic_padding(u_pad, u):
 
     #u_pad[-1, -1, -1] = u[0, 0, 0]
 
-first = 1
-def replicate_padding(u_pad, u):
+def replicate_padding(u_pad, u, first):
     'Replicate padding of u (pad = 1 pix), with in-place copy of u into the buffer u_pad.'
-    global first
     c, C = 1, -1
     if first:
         print("fix u_pad!")
@@ -241,7 +239,6 @@ def replicate_padding(u_pad, u):
         #u_pad[-1, -1, 0] = u[-1, -1, 0]
         #u_pad[0, -1, -1] = u[0, -1, -1]
         #u_pad[-1, 0, -1] = u[-1, 0, -1]
-        first -= 1
     elif False:
          u[0, :, :]=u_pad[0, c:C, c:C]
          u[-1, :, :]=u_pad[-1, c:C, c:C]
@@ -399,15 +396,16 @@ def my_custom_GradHess(mode) :
         padding = replicate_padding
 
     class GradHessianFunc(torch.autograd.Function):
-
+        first_forward = True
+        first_backward = True
         @staticmethod
         def forward(ctx, u, u_pad, grad, H_diag, H_off, d_pad, d_u):
             
             ctx.save_for_backward(d_pad, d_u)
             print("forward")
-            padding(u_pad, u) # Pad u
+            padding(u_pad, u, first_forward) # Pad u
             grad_hessian(u_pad, grad, H_diag, H_off)  # Compute the gradient and Hessian in place
-
+            first_forward = False
             return grad, H_diag, H_off
 
 
@@ -419,17 +417,17 @@ def my_custom_GradHess(mode) :
 
             # Backward from d_grad:
             print("backward")
-            padding(d_pad, d_grad)    # d_pad <- d_grad
+            padding(d_pad, d_grad, first_backward)    # d_pad <- d_grad
             backward_grad(d_pad, d_u) # d_pad -> d_u
 
             # Backward from d_H_diag:
-            padding(d_pad, d_H_diag)    # d_pad <- d_H_diag
+            padding(d_pad, d_H_diag, first_backward)    # d_pad <- d_H_diag
             backward_H_diag(d_pad, d_u) # d_pad -> d_u
 
             # Backward from d_H_off:
-            padding(d_pad, d_H_off)    # d_pad <- d_H_off
+            padding(d_pad, d_H_off, first_backward)    # d_pad <- d_H_off
             backward_H_off(d_pad, d_u) # d_pad -> d_u
-
+            first_backward = False
             return d_u, None, None, None, None, None, None
 
     class GradHessian(torch.nn.Module):
