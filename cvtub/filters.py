@@ -193,7 +193,7 @@ def periodic_padding(u_pad, u):
 
     #u_pad[-1, -1, -1] = u[0, 0, 0]
 
-first = 5
+first = 1
 def replicate_padding(u_pad, u):
     'Replicate padding of u (pad = 1 pix), with in-place copy of u into the buffer u_pad.'
     global first
@@ -269,8 +269,12 @@ def replicate_padding(u_pad, u):
         u[:, -1, 0] = u_pad[c:C, -1, 0]
         u[:, -1, -1] = u_pad[c:C, -1, -1]
 
+
     # Central chunk:
     u_pad[c:C, c:C, c:C] = u
+    diff = u_pad[0, c:C, 0] - u[0, :, 0]
+    diff = diff.detach().cpu().numpy()
+    print(np.linalg.norm(diff))
 
 'Then, grad and Hess'
 def grad_hessian(u_pad, grad, H_diag, H_off):
