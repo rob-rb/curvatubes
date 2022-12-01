@@ -42,7 +42,7 @@ def slices(u, figsize = (12,4), rescale = True, cmap = 'gray', save = False, tit
     Z = u.shape[0]
     if not rescale : vmin = 0. ; vmax = 1. 
     fig, ax = plt.subplots(1, 3, figsize = figsize, sharex=True, sharey=True)
-    ax[0].imshow(np.asarray(u[Z//3], dtype=np.float64), vmin = vmin, vmax = vmax, cmap = cmap)
+    ax[0].imshow(np.asarray(u[0], dtype=np.float64), vmin = vmin, vmax = vmax, cmap = cmap)
     ax[1].imshow(np.asarray(u[Z//2], dtype=np.float64), vmin = vmin, vmax = vmax, cmap = cmap)
     ax[2].imshow(np.asarray(u[2 * Z//3], dtype=np.float64), vmin = vmin, vmax = vmax, cmap = cmap)
     fig.tight_layout()
