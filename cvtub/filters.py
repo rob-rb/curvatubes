@@ -404,7 +404,7 @@ def my_custom_GradHess(mode) :
         def forward(ctx, u, u_pad, grad, H_diag, H_off, d_pad, d_u):
             
             ctx.save_for_backward(d_pad, d_u)
-            
+            print("forward")
             padding(u_pad, u) # Pad u
             grad_hessian(u_pad, grad, H_diag, H_off)  # Compute the gradient and Hessian in place
 
@@ -418,6 +418,7 @@ def my_custom_GradHess(mode) :
             d_u.zero_()  # The backward_grad/H_diag/H_off act by increments
 
             # Backward from d_grad:
+            print("backward")
             padding(d_pad, d_grad)    # d_pad <- d_grad
             backward_grad(d_pad, d_u) # d_pad -> d_u
 
