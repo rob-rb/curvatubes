@@ -197,7 +197,7 @@ def replicate_padding(u_pad, u, first):
     'Replicate padding of u (pad = 1 pix), with in-place copy of u into the buffer u_pad.'
     c, C = 1, -1
     if first:
-        print("fix u_pad!")
+        #print("fix u_pad!")
         # The 6 2D panels:
         u_pad[ 0, c:C, c:C] = u[ 0, :, :]
         u_pad[-1, c:C, c:C] = u[-1, :, :]
@@ -269,10 +269,10 @@ def replicate_padding(u_pad, u, first):
 
     # Central chunk:
     u_pad[c:C, c:C, c:C] = u
-    diff = u_pad[0, c:C, 0] - u[0, :, 0]
-    diff = diff.detach().cpu().numpy()
-    import numpy as np
-    print(np.linalg.norm(diff))
+    #diff = u_pad[0, c:C, 0] - u[0, :, 0]
+    #diff = diff.detach().cpu().numpy()
+    #import numpy as np
+    #print(np.linalg.norm(diff))
 
 'Then, grad and Hess'
 def grad_hessian(u_pad, grad, H_diag, H_off):
@@ -402,7 +402,7 @@ def my_custom_GradHess(mode) :
         def forward(ctx, u, u_pad, grad, H_diag, H_off, d_pad, d_u):
             
             ctx.save_for_backward(d_pad, d_u)
-            print("forward")
+            #print("forward")
             padding(u_pad, u, GradHessianFunc.first_forward) # Pad u
             grad_hessian(u_pad, grad, H_diag, H_off)  # Compute the gradient and Hessian in place
             GradHessianFunc.first_forward = False
@@ -416,7 +416,7 @@ def my_custom_GradHess(mode) :
             d_u.zero_()  # The backward_grad/H_diag/H_off act by increments
 
             # Backward from d_grad:
-            print("backward")
+            #print("backward")
             padding(d_pad, d_grad, GradHessianFunc.first_backward)    # d_pad <- d_grad
             backward_grad(d_pad, d_u) # d_pad -> d_u
 
