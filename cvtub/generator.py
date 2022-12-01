@@ -31,8 +31,8 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
                     flow_type, mode, M0 = None,
                    snapshot_folder = '', exp_title = '',
                    cond_take_snapshot = None, display_all = True, 
-                   return_var = False, return_energy = False, check_viable = False, callback_count=100, callback=False) :
-    
+                   return_var = False, return_energy = False, check_viable = False, callback_count=100, callback=False):
+
     ''' Optimizes the phase-field energy 
     
             kap_poly_deg2(u) = Feps(u)
