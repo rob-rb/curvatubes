@@ -108,7 +108,7 @@ class GeneralGaussianBlur3D_notperiodic(torch.nn.Module):
         #(but then would be very close to the usual GeneralGaussianBlur3D_periodic).
         super(GeneralGaussianBlur3D_notperiodic, self).__init__()
         
-        if None not in [sig_z, sig_x, sig_y] :
+        if 0 not in [sig_z, sig_x, sig_y] :
             
             self.trivial = False
             self.pad_z = int(3 * sig_z)
@@ -119,7 +119,9 @@ class GeneralGaussianBlur3D_notperiodic(torch.nn.Module):
             self.fk_pad_c = separable_fourier_filter((Z + 2 * self.pad_z)//2, sig_z)  # (1,1,Z + 2 pad_z) ? complex
             self.fi_pad_c = separable_fourier_filter((X + 2 * self.pad_x)//2, sig_x)  # (1,1,X + 2 pad_x) ? complex
             self.fj_pad_c = separable_fourier_filter((Y + 2 * self.pad_y)//2, sig_y)  # (1,1,Y + 2 pad_y) ? complex
-            
+
+            if self.pad_x < 1:
+                self.trivial = True
         else :
             self.trivial = True
             
