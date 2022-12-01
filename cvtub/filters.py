@@ -274,6 +274,7 @@ def replicate_padding(u_pad, u):
     u_pad[c:C, c:C, c:C] = u
     diff = u_pad[0, c:C, 0] - u[0, :, 0]
     diff = diff.detach().cpu().numpy()
+    import numpy as np
     print(np.linalg.norm(diff))
 
 'Then, grad and Hess'
