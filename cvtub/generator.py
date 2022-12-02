@@ -310,6 +310,7 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
             grad_max_curve += [grad_max]
 
         if n_evals < 10:
+            print("E", E.item())
             callback(n_evals, u.detach().cpu().numpy())
 
         if display_all and n_evals % callback_count == 0 and len(E_curve) > 0:
