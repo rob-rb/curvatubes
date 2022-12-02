@@ -274,6 +274,55 @@ def replicate_padding(u_pad, u, first):
     #import numpy as np
     #print(np.linalg.norm(diff))
 
+
+def replicate_padding(u_pad, u, dummy):
+    'Replicate padding of u (pad = 1 pix), with in-place copy of u into the buffer u_pad.'
+
+    c, C = 1, -1
+
+    # Central chunk:
+    u_pad[c:C, c:C, c:C] = u
+
+    # The 6 2D panels:
+    u_pad[0, c:C, c:C] = u[0, :, :]
+    u_pad[-1, c:C, c:C] = u[-1, :, :]
+
+    u_pad[c:C, 0, c:C] = u[:, 0, :]
+    u_pad[c:C, -1, c:C] = u[:, -1, :]
+
+    u_pad[c:C, c:C, 0] = u[:, :, 0]
+    u_pad[c:C, c:C, -1] = u[:, :, -1]
+
+    # The 12 1D lines:
+    u_pad[0, 0, c:C] = u[0, 0, :]
+    u_pad[0, -1, c:C] = u[0, -1, :]
+
+    u_pad[-1, 0, c:C] = u[-1, 0, :]
+    u_pad[-1, -1, c:C] = u[-1, -1, :]
+
+    u_pad[0, c:C, 0] = u[0, :, 0]
+    u_pad[0, c:C, -1] = u[0, :, -1]
+
+    u_pad[-1, c:C, 0] = u[-1, :, 0]
+    u_pad[-1, c:C, -1] = u[-1, :, -1]
+
+    u_pad[c:C, 0, 0] = u[:, 0, 0]
+    u_pad[c:C, 0, -1] = u[:, 0, -1]
+
+    u_pad[c:C, -1, 0] = u[:, -1, 0]
+    u_pad[c:C, -1, -1] = u[:, -1, -1]
+
+    # The 8 corners: not useful
+    # u_pad[0, 0, 0] = u[0, 0, 0]
+
+    # u_pad[-1, 0, 0] = u[-1, 0, 0]
+    # u_pad[0, -1, 0] = u[0, -1, 0]
+    # u_pad[0, 0, -1] = u[0, 0, -1]
+
+    # u_pad[-1, -1, 0] = u[-1, -1, 0]
+    # u_pad[0, -1, -1] = u[0, -1, -1]
+    # u_pad[-1, 0, -1] = u[-1, 0, -1]
+
 'Then, grad and Hess'
 def grad_hessian(u_pad, grad, H_diag, H_off):
     'In-place filling of grad, H_diag (diag of Hess), H_off (off-diag of Hess) with u_pad'
