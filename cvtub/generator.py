@@ -261,11 +261,11 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
             if iteration > 0:
                 diff = u - v0
                 if distance_weight > 0:
-                    exp = 3
+                    exp = 1
                     E += torch.linalg.norm(diff)**exp * distance_weight
                 if border_distance_weight > 0:
                     border = (1, -1)
-                    exp = 3
+                    exp = 1
                     E += torch.linalg.norm(diff[border,:,:])**exp * border_distance_weight
                     E += torch.linalg.norm(diff[:,border, :])**exp * border_distance_weight
                     E += torch.linalg.norm(diff[:, :, border])**exp * border_distance_weight
