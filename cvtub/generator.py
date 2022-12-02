@@ -346,7 +346,11 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
         global v0
         #if cond_take_snapshot is not None:
         #    take_snapshot()
-        
+        #if n_evals < 22:
+        #    callback(n_evals, u)
+        if n_evals == 19:
+            print("cloning stuff")
+            v0 = u.clone()
         optimizer.zero_grad()
         E = loss()
         E.backward()
@@ -354,10 +358,7 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
         track_E(E)
         track_mass()
 
-        if n_evals < 20:
-            callback(n_evals, u)
-        if iteration == 19:
-            v0 = u.clone()
+
         return E
 
     while nan_OK and viable_OK and n_evals <= maxeval:
