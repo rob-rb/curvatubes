@@ -25,7 +25,7 @@ from cvtub.filters import GeneralGaussianBlur3D_periodic, GeneralGaussianBlur3D_
 from cvtub.filters import my_custom_GradHess
 
 from cvtub.energy import polykap_deg2, ratio_discr
-
+count = 0
 
 def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props, 
                     flow_type, mode, M0 = None,
@@ -90,7 +90,7 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
     global iteration, n_evals, first_snapshot, title, nan_OK, viable_OK, u, uu
     global E_curve, grad_L1mean_curve, grad_max_curve, M_curve
     global params2, M02 # a copy of params and M0 to avoid an error I cannot understand
-    
+    global count
     if len(params) == 9 :
         eps, a20, a11, a02, b10, b01, c, mu, theta = params
         orientation = True
@@ -251,10 +251,10 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
     
     params2 = params # create a copy because I don't know why there is a bug not finding the variable
     M02 = M0 # create a copy because I don't know why there is a bug not finding the variable
-    count = 0
+
     def loss() :
         global u, uu, n_evals, iteration, params2, M02
-        global count
+
         count +=1
         if flow_type == 'L2' :
             u = gaussian_blur(uu)
