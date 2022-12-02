@@ -262,14 +262,14 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
                 diff = u - u0
                 if distance_weight > 0:
                     exp = 1
-                    E += torch.linalg.norm(diff)**exp * distance_weight
+                    E += torch.linalg.vector_norm(diff)**exp * distance_weight
                 if border_distance_weight > 0:
                     border = (1, -1)
                     exp = 1
-                    E += torch.linalg.norm(diff[border,:,:])**exp * border_distance_weight
-                    E += torch.linalg.norm(diff[:,border, :])**exp * border_distance_weight
-                    E += torch.linalg.norm(diff[:, :, border])**exp * border_distance_weight
-            print(E, E0, torch.norm(u0))
+                    E += torch.linalg.vector_norm(diff[border,:,:])**exp * border_distance_weight
+                    E += torch.linalg.vector_norm(diff[:,border, :])**exp * border_distance_weight
+                    E += torch.linalg.vector_norm(diff[:, :, border])**exp * border_distance_weight
+            #print(E, E0, torch.norm(u0))
             E += E0
         if flow_type == 'averm0' :
             u = uu#gaussian_blur(uu)
@@ -348,11 +348,11 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
         #    take_snapshot()
         #if n_evals < 22:
         #    callback(n_evals, u)
-        if n_evals == 19:
-            print("loss before cloning", loss())
-            print("cloning stuff")
-            u0 = uu.clone()
-            print("loss after cloning", loss())
+        # if n_evals == 19:
+        #     print("loss before cloning", loss())
+        #     print("cloning stuff")
+        #     u0 = uu.clone()
+        #     print("loss after cloning", loss())
         optimizer.zero_grad()
         E = loss()
         E.backward()
