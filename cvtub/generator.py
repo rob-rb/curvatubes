@@ -266,9 +266,9 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
                     E += torch.linalg.norm(diff)*distance_weight
                 if border_distance_weight > 0:
                     border = (1, -1)
-                    E += torch.linalg.norm(diff[border,:,:])*border_distance_weight
-                    E += torch.linalg.norm(diff[:,border, :]) * border_distance_weight
-                    E += torch.linalg.norm(diff[:, :, border]) * border_distance_weight
+                    E += torch.linalg.norm(diff[border,:,:])**2*border_distance_weight
+                    E += torch.linalg.norm(diff[:,border, :])**2* border_distance_weight
+                    E += torch.linalg.norm(diff[:, :, border])**2 * border_distance_weight
 
         if flow_type == 'averm0' :
             u = uu#gaussian_blur(uu)
