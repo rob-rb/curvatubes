@@ -258,7 +258,7 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
             u = gaussian_blur(uu)
             E0 = polykap_deg2(u, params2, delta_x, xi, GradHessConv_ZXY)
             E = 0
-            if n_evals > 0:
+            if True or n_evals > 0:
                 diff = u - v0
                 if distance_weight > 0:
                     exp = 1
@@ -350,7 +350,9 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
         #    callback(n_evals, u)
         if n_evals == 19:
             print("cloning stuff")
-            v0 = u.clone()
+            v0 = uu.clone()
+            print("loss")
+            E = loss()
         optimizer.zero_grad()
         E = loss()
         E.backward()
