@@ -25,8 +25,8 @@ from cvtub.filters import GeneralGaussianBlur3D_periodic, GeneralGaussianBlur3D_
 from cvtub.filters import my_custom_GradHess
 
 from cvtub.energy import polykap_deg2, ratio_discr
-count = 0
 
+count = 0
 def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props, 
                     flow_type, mode, M0 = None,
                    snapshot_folder = '', exp_title = '',
@@ -87,10 +87,9 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
         
     '''
     
-    global iteration, n_evals, first_snapshot, title, nan_OK, viable_OK, u, uu
+    global iteration, n_evals, first_snapshot, title, nan_OK, viable_OK, u, uu, count
     global E_curve, grad_L1mean_curve, grad_max_curve, M_curve
     global params2, M02 # a copy of params and M0 to avoid an error I cannot understand
-    global count
     if len(params) == 9 :
         eps, a20, a11, a02, b10, b01, c, mu, theta = params
         orientation = True
