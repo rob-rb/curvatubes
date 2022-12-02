@@ -88,7 +88,7 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
     '''
     
     global iteration, n_evals, first_snapshot, title, nan_OK, viable_OK, u, uu, count
-    global E_curve, grad_L1mean_curve, grad_max_curve, M_curve
+    global E_curve, grad_L1mean_curve, grad_max_curve, M_curve, u0
     global params2, M02 # a copy of params and M0 to avoid an error I cannot understand
     if len(params) == 9 :
         eps, a20, a11, a02, b10, b01, c, mu, theta = params
@@ -234,7 +234,7 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
     print('')
     print(" umin = {}, umax = {}".format(u.min().item(), u.max().item()) )
     print(" m =  {:.3f} \n".format(u.mean().item()) )
-    
+    u0 = v0.clone()
     # prepare the optimizers + PyTorch
     
     if flow_type in ['L2','averm0'] :
@@ -250,7 +250,7 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
     
     params2 = params # create a copy because I don't know why there is a bug not finding the variable
     M02 = M0 # create a copy because I don't know why there is a bug not finding the variable
-    u0 = v0.clone()
+
     def loss() :
         global u, uu, n_evals,  params2, M02, u0
 
