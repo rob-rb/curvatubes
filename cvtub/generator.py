@@ -342,6 +342,7 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
             first_snapshot = False
             
     def closure():
+        global v0
         #if cond_take_snapshot is not None:
         #    take_snapshot()
         
@@ -351,16 +352,17 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
         
         track_E(E)
         track_mass()
+
+        if n_evals < 20:
+            callback(n_evals, u)
+        if iteration == 19:
+            v0 = u.clone()
         return E
 
     while nan_OK and viable_OK and n_evals <= maxeval:
         
         optimizer.step(closure)
-        iteration += 1 # for sgd and adam, iteration = n_evals
-        if iteration < 20:
-            callback(iteration, u)
-        if iteration == 19:
-            v0 = u.clone()
+        iteration += 1
         first_snapshot = True # retake snapshots for the next interesting iteration
         
         if check_viable and n_evals in [100, 500,1000,5000] : # check 3 times
