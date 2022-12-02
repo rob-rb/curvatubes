@@ -250,9 +250,9 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
     
     params2 = params # create a copy because I don't know why there is a bug not finding the variable
     M02 = M0 # create a copy because I don't know why there is a bug not finding the variable
-
+    u0 = v0.clone()
     def loss() :
-        global u, uu, n_evals,  params2, M02, v0
+        global u, uu, n_evals,  params2, M02, u0
 
         if flow_type == 'L2' :
             u = gaussian_blur(uu)
