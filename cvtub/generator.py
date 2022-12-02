@@ -259,7 +259,7 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
             E0 = polykap_deg2(u, params2, delta_x, xi, GradHessConv_ZXY)
             E = 0
             if True or n_evals > 0:
-                diff = u - v0
+                diff = u - u0
                 if distance_weight > 0:
                     exp = 1
                     E += torch.linalg.norm(diff)**exp * distance_weight
@@ -269,7 +269,7 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
                     E += torch.linalg.norm(diff[border,:,:])**exp * border_distance_weight
                     E += torch.linalg.norm(diff[:,border, :])**exp * border_distance_weight
                     E += torch.linalg.norm(diff[:, :, border])**exp * border_distance_weight
-            print(E, E0, torch.norm(v0))
+            print(E, E0, torch.norm(u0))
             E += E0
         if flow_type == 'averm0' :
             u = uu#gaussian_blur(uu)
@@ -343,7 +343,7 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
             first_snapshot = False
             
     def closure():
-        global v0, u
+        global u0, u
         #if cond_take_snapshot is not None:
         #    take_snapshot()
         #if n_evals < 22:
@@ -351,7 +351,7 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
         if n_evals == 19:
             print("loss before cloning", loss())
             print("cloning stuff")
-            v0 = u.clone()
+            u0 = u.clone()
             print("loss after cloning", loss())
         optimizer.zero_grad()
         E = loss()
