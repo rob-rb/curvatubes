@@ -252,19 +252,13 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
     M02 = M0 # create a copy because I don't know why there is a bug not finding the variable
 
     def loss() :
-        global u, uu, n_evals, iteration, params2, M02, count, v0
+        global u, uu, n_evals, iteration, params2, M02
 
-        count +=1
         if flow_type == 'L2' :
             u = gaussian_blur(uu)
             E = polykap_deg2(u, params2, delta_x, xi, GradHessConv_ZXY)
-            print("count ", count)
-            which_count = 20
-            if count == which_count:
-                print("hold")
-                callback(count, u.detach().cpu().numpy())
-                v0 = u.clone()
-            if count > which_count:
+
+            if iteration > 20:
                 diff = u - v0
                 if distance_weight > 0:
                     exp = 3
@@ -363,6 +357,10 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
         
         optimizer.step(closure)
         iteration += 1 # for sgd and adam, iteration = n_evals
+        if iteration < 20:
+            callback(iteration, u)
+        if iteration == 19:
+            v0 = u.clone()
         first_snapshot = True # retake snapshots for the next interesting iteration
         
         if check_viable and n_evals in [100, 500,1000,5000] : # check 3 times
