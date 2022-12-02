@@ -252,7 +252,7 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
     M02 = M0 # create a copy because I don't know why there is a bug not finding the variable
 
     def loss() :
-        global u, uu, n_evals,  params2, M02
+        global u, uu, n_evals,  params2, M02, v0
 
         if flow_type == 'L2' :
             u = gaussian_blur(uu)
@@ -269,7 +269,7 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
                     E += torch.linalg.norm(diff[border,:,:])**exp * border_distance_weight
                     E += torch.linalg.norm(diff[:,border, :])**exp * border_distance_weight
                     E += torch.linalg.norm(diff[:, :, border])**exp * border_distance_weight
-            print(E, E0)
+            print(E, E0, torch.norm(v0))
             E += E0
         if flow_type == 'averm0' :
             u = uu#gaussian_blur(uu)
