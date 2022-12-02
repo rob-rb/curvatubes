@@ -31,7 +31,7 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
                     flow_type, mode, M0 = None,
                    snapshot_folder = '', exp_title = '',
                    cond_take_snapshot = None, display_all = True, 
-                   return_var = False, return_energy = False, check_viable = False, dist_weight=0, callback_count=100, callback=False):
+                   return_var = False, return_energy = False, check_viable = False, distance_weight=0, callback_count=100, callback=False):
 
     ''' Optimizes the phase-field energy 
     
@@ -257,7 +257,8 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
         if flow_type == 'L2' :
             u = gaussian_blur(uu)
             E = polykap_deg2(u, params2, delta_x, xi, GradHessConv_ZXY)
-            E += torch.cdist(u, v0)*dist_weight
+            if distance_weight > 0:
+                E += torch.cdist(u, v0)*distance_weight
         if flow_type == 'averm0' :
             u = uu#gaussian_blur(uu)
             u_m0 = project_average(u, m = M02)
