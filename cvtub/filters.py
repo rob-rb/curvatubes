@@ -284,7 +284,7 @@ def grad_hessian(u_pad, grad, H_diag, H_off):
     p, P = 2, None  # 2:0
 
     # Center pixel:
-    U    = u_pad[c:C,c:C,c:C]
+    U = u_pad[c:C, c:C, c:C]
     
     # 6 neighbors:
     U_z, U_Z  = u_pad[m:M,c:C,c:C], u_pad[p: ,c:C,c:C]
