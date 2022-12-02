@@ -258,9 +258,9 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
         if flow_type == 'L2' :
             u = gaussian_blur(uu)
             E = polykap_deg2(u, params2, delta_x, xi, GradHessConv_ZXY)
-            if count == 10:
+            if count == 5:
                 v0 = u.clone()
-            if count > 10:
+            if count > 5:
                 diff = u - v0
                 if distance_weight > 0:
                     E += torch.linalg.norm(diff)*distance_weight
