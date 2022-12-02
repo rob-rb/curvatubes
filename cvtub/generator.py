@@ -258,8 +258,7 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
             u = gaussian_blur(uu)
             E = polykap_deg2(u, params2, delta_x, xi, GradHessConv_ZXY)
             if distance_weight > 0:
-                print(u.shape, v0.shape)
-                E += torch.cdist(u, v0)*distance_weight
+                E += torch.linalg.norm(u - v0)*distance_weight
         if flow_type == 'averm0' :
             u = uu#gaussian_blur(uu)
             u_m0 = project_average(u, m = M02)
