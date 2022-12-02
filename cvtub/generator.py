@@ -309,7 +309,7 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
             grad_max = (torch.abs(variable.grad).max()).item()
             grad_max_curve += [grad_max]
 
-        if n_evals == 3:
+        if n_evals < 10:
             callback(n_evals, u.detach().cpu().numpy())
 
         if display_all and n_evals % callback_count == 0 and len(E_curve) > 0:
