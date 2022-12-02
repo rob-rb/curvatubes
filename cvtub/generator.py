@@ -260,7 +260,7 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
             E = polykap_deg2(u, params2, delta_x, xi, GradHessConv_ZXY)
             which_count = 20
             if count == which_count:
-                callback(n_evals, u.detach().cpu().numpy())
+                callback(count, u.detach().cpu().numpy())
                 v0 = u.clone()
             if count > which_count:
                 diff = u - v0
