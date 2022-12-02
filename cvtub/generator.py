@@ -31,7 +31,8 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
                     flow_type, mode, M0 = None,
                    snapshot_folder = '', exp_title = '',
                    cond_take_snapshot = None, display_all = True, 
-                   return_var = False, return_energy = False, check_viable = False, distance_weight=0, callback_count=100, callback=False):
+                   return_var = False, return_energy = False, check_viable = False,
+                    distance_weight=0,border_distance_weight=0, callback_count=100, callback=False):
 
     ''' Optimizes the phase-field energy 
     
@@ -261,9 +262,9 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
                 diff = u - v0
                 E += torch.linalg.norm(diff)*distance_weight
                 border = (1, -1)
-                E += torch.linalg.norm(diff[border,:,:])*distance_weight*2
-                E += torch.linalg.norm(diff[:,border, :]) * distance_weight * 2
-                E += torch.linalg.norm(diff[:, :, border]) * distance_weight * 2
+                E += torch.linalg.norm(diff[border,:,:])*border_distance_weight
+                E += torch.linalg.norm(diff[:,border, :]) * border_distance_weight
+                E += torch.linalg.norm(diff[:, :, border]) * border_distance_weight
         if flow_type == 'averm0' :
             u = uu#gaussian_blur(uu)
             u_m0 = project_average(u, m = M02)
