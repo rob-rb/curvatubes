@@ -351,7 +351,7 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
         if n_evals == 19:
             print("loss before cloning", loss())
             print("cloning stuff")
-            u0 = u.clone()
+            u0 = uu.clone()
             print("loss after cloning", loss())
         optimizer.zero_grad()
         E = loss()
