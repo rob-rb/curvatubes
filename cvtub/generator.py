@@ -252,7 +252,7 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
     M02 = M0 # create a copy because I don't know why there is a bug not finding the variable
 
     def loss() :
-        global u, uu, n_evals, iteration, params2, M02
+        global u, uu, n_evals, iteration, params2, M02, count
 
         count +=1
         if flow_type == 'L2' :
