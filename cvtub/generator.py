@@ -298,29 +298,33 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
         if np.isnan(E.item()) == True :
             global nan_OK
             nan_OK = False
-        if n_evals % fill_curve_nb == 0 :   
+        if n_evals % fill_curve_nb == 0 :
             global E_curve, Fid_curve, grad_L1mean_curve, grad_max_curve
 
             E_curve += [E.item()]
-            
+
             grad_L1mean = (torch.sum(torch.abs(variable.grad)) / (Z * X * Y)).item()
             grad_L1mean_curve += [grad_L1mean]
-            
+
             grad_max = (torch.abs(variable.grad).max()).item()
             grad_max_curve += [grad_max]
+
+        if n_evals == 3:
+            print('{:=5d}: E = {:.2e}, '.format(n_evals, E_curve[-1]), end="")
+            callback(n_evals, u.detach().cpu().numpy())
 
         if display_all and n_evals % callback_count == 0 and len(E_curve) > 0:
             print('{:=5d}: E = {:.2e}, '.format(n_evals, E_curve[-1]), end="")
             callback(n_evals, u.detach().cpu().numpy())
 
-        if display_all and (n_evals + 1) % 100 == 0: 
+        if display_all and (n_evals + 1) % 100 == 0:
             print("")
-        
-        if display_all and n_evals % display_it_nb == 0 and len(E_curve) > 0 : 
+
+        if display_all and n_evals % display_it_nb == 0 and len(E_curve) > 0 :
             print('\n \n at eval {}'.format(n_evals))
             print('grad_L1mean = {:.4e}'.format(grad_L1mean))
             print('latex_grad_max = {:.4e}'.format(grad_max))
-                        
+
     def track_mass() :
         mass = u.mean().item()
         if n_evals % fill_curve_nb == 0 :
