@@ -343,16 +343,16 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
             first_snapshot = False
             
     def closure():
-        global v0
+        global v0, u
         #if cond_take_snapshot is not None:
         #    take_snapshot()
         #if n_evals < 22:
         #    callback(n_evals, u)
         if n_evals == 19:
+            print("loss before cloning", loss())
             print("cloning stuff")
-            v0 = uu.clone()
-            print("loss")
-            E = loss()
+            v0 = u.clone()
+            print("loss after cloning", loss())
         optimizer.zero_grad()
         E = loss()
         E.backward()
