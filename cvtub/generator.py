@@ -258,9 +258,10 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
         if flow_type == 'L2' :
             u = gaussian_blur(uu)
             E = polykap_deg2(u, params2, delta_x, xi, GradHessConv_ZXY)
-            if count == 5:
+            which_count = 20
+            if count == which_count:
                 v0 = u.clone()
-            if count > 5:
+            if count > which_count:
                 diff = u - v0
                 if distance_weight > 0:
                     exp = 3
