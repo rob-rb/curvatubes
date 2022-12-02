@@ -251,20 +251,23 @@ def _generate_shape(v0, params, delta_x, xi, optim_method, optim_props,
     
     params2 = params # create a copy because I don't know why there is a bug not finding the variable
     M02 = M0 # create a copy because I don't know why there is a bug not finding the variable
+    count = 0
     def loss() :
         global u, uu, n_evals, iteration, params2, M02
-
+        global count
+        count +=1
         if flow_type == 'L2' :
             u = gaussian_blur(uu)
             E = polykap_deg2(u, params2, delta_x, xi, GradHessConv_ZXY)
-            diff = u - v0
-            if distance_weight > 0:
-                E += torch.linalg.norm(diff)*distance_weight
-            if border_distance_weight > 0:
-                border = (1, -1)
-                E += torch.linalg.norm(diff[border,:,:])*border_distance_weight
-                E += torch.linalg.norm(diff[:,border, :]) * border_distance_weight
-                E += torch.linalg.norm(diff[:, :, border]) * border_distance_weight
+            if count > 10:
+                diff = u - v0
+                if distance_weight > 0:
+                    E += torch.linalg.norm(diff)*distance_weight
+                if border_distance_weight > 0:
+                    border = (1, -1)
+                    E += torch.linalg.norm(diff[border,:,:])*border_distance_weight
+                    E += torch.linalg.norm(diff[:,border, :]) * border_distance_weight
+                    E += torch.linalg.norm(diff[:, :, border]) * border_distance_weight
         if flow_type == 'averm0' :
             u = uu#gaussian_blur(uu)
             u_m0 = project_average(u, m = M02)
