@@ -15,9 +15,6 @@ Note: convention that u has shape (Z,X,Y)
 
 """
 import torch
-
-dtype = torch.cuda.FloatTensor  # if torch.cuda.is_available() else torch.FloatTensor
-
 from cvtub.utils import double_W, double_W_prime, manual_softplus, device
 
 """ Energy (curvature functional) """
@@ -131,7 +128,9 @@ def auxiliary_function(u, eps, delta_x, mode):
         u = torch.tensor(u, device=device)
 
     Z, X, Y = u.shape
-    GradHessian = my_custom_G, device = deviceGradHess(mode)
+
+    GradHessian = my_custom_GradHess(mode)
+    #GradHessian = my_custom_G, device = deviceGradHess(mode)
     GradHessConv_ZXY = GradHessian(Z, X, Y)
     grad_, Hess_diag_, Hess_off_ = GradHessConv_ZXY(u)
     del GradHessConv_ZXY
