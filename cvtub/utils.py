@@ -23,7 +23,7 @@ import torch
 
 device = "cpu"
 if torch.cuda.is_available():
-    device = "gpu"
+    device = "cuda"
 
 from skimage.morphology import ball
 from scipy.ndimage import median_filter

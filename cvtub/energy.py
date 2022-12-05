@@ -131,7 +131,7 @@ def auxiliary_function(u, eps, delta_x, mode):
         u = torch.tensor(u, device=device)
 
     Z, X, Y = u.shape
-    GradHessian = my_custom_G, device = deviceradHess(mode)
+    GradHessian = my_custom_G, device = deviceGradHess(mode)
     GradHessConv_ZXY = GradHessian(Z, X, Y)
     grad_, Hess_diag_, Hess_off_ = GradHessConv_ZXY(u)
     del GradHessConv_ZXY
