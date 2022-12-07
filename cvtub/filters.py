@@ -492,7 +492,7 @@ def my_custom_GradHess(mode):
             return grad, H_diag, H_off
 
         @staticmethod
-        def backward(ctx, d_grad, d_H_diag, d_H_off):
+        def backward2(ctx, d_grad, d_H_diag, d_H_off):
 
             d_pad, d_u = ctx.saved_tensors
             d_u.zero_()  # The backward_grad/H_diag/H_off act by increments
